@@ -2,50 +2,47 @@ import React, { useState, useEffect } from "react";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
 
+let items = localStorage.getItem("items")
+  ? JSON.parse(localStorage.getItem("items"))
+  : [];
+
 const App = () => {
   const [todo, setTodo] = useState("");
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState(items);
   const [editId, setEditId] = useState(0);
 
-  // Load todos from local storage when the component mounts
   useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem("todos"));
-    if (storedTodos) {
-      setTodos(storedTodos);
-    }
-  }, []);
-
-  // Save todos to local storage whenever the todos state changes
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
+    localStorage.setItem("items", JSON.stringify(todos));
   }, [todos]);
+  //  effect will only be triggered when the list variable changes.
+
+ 
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (editId) {
-      const editTodo = todos.find((i) => i.id === editId);
       const updatedTodos = todos.map((t) =>
-        t.id === editTodo.id ? { id: t.id, todo } : { id: t.id, todo: t.todo }
+        t.id === editId ? { id: t.id, todo } : t
       );
       setTodos(updatedTodos);
       setEditId(0);
       setTodo("");
     } else if (todo.trim() !== "") {
-      // Add the new todo to the beginning of the todos array
-      setTodos([{ id: `${todo}-${Date.now()}`, todo }, ...todos]);
+      const newTodo = { id: `${todo}-${Date.now()}`, todo };
+      setTodos([newTodo, ...todos]);
       setTodo("");
     }
   };
 
   const handleDelete = (id) => {
-    const delTodo = todos.filter((to) => to.id !== id);
-    setTodos([...delTodo]);
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodos);
   };
 
   const handleEdit = (id) => {
-    const editTodo = todos.find((i) => i.id === id);
-    setTodo(editTodo.todo);
+    const todoToEdit = todos.find((todo) => todo.id === id);
+    setTodo(todoToEdit.todo);
     setEditId(id);
   };
 
