@@ -9,7 +9,7 @@ const TodoForm = ({ handleSubmit, todo, editId, setTodo }) => {
         value={todo}
         onChange={(e) => setTodo(e.target.value)} // Render an input field with value and onChange event handler.
       />
-      <button type="submit"> {editId ? "Edit" : "Submit"}</button> {/* Render a button with dynamic text based on editId prop. */}
+      <button type="submit"> {editId ? "Submit" : "Submit"}</button> {/* Render a button with dynamic text based on editId prop. */}
     </form> 
   ); // End of the render method.
 };
